@@ -39,6 +39,26 @@
       "notes": "prueba 4",
       "status": "pending",
       "createdAt": "2025-08-01T04:04:12.419Z"
+    },
+    {
+      "id": "56a4",
+      "productId": 6,
+      "productName": "Mascarillas N95",
+      "quantity": 10,
+      "destination": "ghv",
+      "notes": "ghghggh",
+      "status": "pending",
+      "createdAt": "2025-08-01T18:51:33.908Z"
+    },
+    {
+      "id": "03f5",
+      "productId": 8,
+      "productName": "Pipetas automáticas (1-10µl)",
+      "quantity": 1,
+      "destination": "dsfsdfdsf",
+      "notes": "sdf",
+      "status": "pending",
+      "createdAt": "2025-08-01T19:13:08.779Z"
     }
   ],
   "stock": [
