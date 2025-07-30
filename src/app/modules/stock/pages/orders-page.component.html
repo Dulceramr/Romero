@@ -1,0 +1,27 @@
+<form [formGroup]="orderForm" (ngSubmit)="onSubmit()">
+  <h2>🧾 Nueva Orden</h2>
+
+  <!-- Selector de producto -->
+  <label>Producto:</label>
+  <select formControlName="productId">
+    <option *ngFor="let product of products$ | async" [value]="product.id">
+      {{ product.name }} ({{ product.quantity }} disponibles)
+    </option>
+  </select>
+
+  <!-- Cantidad -->
+  <label>Cantidad:</label>
+  <app-stock-input 
+    type="number" 
+    formControlName="quantity"
+    [min]="1">
+  </app-stock-input>
+
+  <!-- Destino -->
+  <label>Destino:</label>
+  <input type="text" formControlName="destination">
+
+  <button type="submit" [disabled]="!orderForm.valid">
+    Crear Orden
+  </button>
+</form>
