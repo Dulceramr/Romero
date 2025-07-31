@@ -1,8 +1,9 @@
 export interface Order {
   id?: number;
-  productId: number;      // Relación con el stock
+  productId: number;
+  productName?: string;
   quantity: number;
   destination: string;
-  status: 'pending' | 'shipped' | 'delivered';
-  createdAt?: Date;       // Auto-generado
+  status: 'pending' | 'completed' | 'cancelled';
+  createdAt?: Date;
 }

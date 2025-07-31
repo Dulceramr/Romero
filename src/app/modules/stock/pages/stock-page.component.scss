@@ -1,0 +1,114 @@
+@use 'src/styles' as *;
+
+.stock-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+.product-card {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: $shadow-sm;
+  transition: transform 0.3s ease;
+  border-top: 3px solid $color-primary;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: $shadow-md;
+  }
+  
+  &.low-stock {
+    border-top-color: $color-warning;
+    
+    .quantity {
+      color: $color-warning;
+      font-weight: bold;
+    }
+  }
+}
+
+.card-header {
+  padding: 1rem;
+  background: rgba($color-primary, 0.05);
+  border-bottom: 1px solid rgba($color-primary, 0.1);
+  
+  h3 {
+    margin: 0;
+    color: $color-text-primary;
+    display: flex;
+    align-items: center;
+    
+    &:before {
+      content: '🧫';
+      margin-right: 8px;
+    }
+  }
+  
+  .category {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.8rem;
+    border-radius: 12px;
+    margin-top: 0.5rem;
+    
+    &.materials {
+      background: rgba($color-primary, 0.1);
+      color: darken($color-primary, 20%);
+    }
+    
+    &.safety {
+      background: rgba($color-secondary, 0.1);
+      color: darken($color-secondary, 20%);
+    }
+  }
+}
+
+.card-body {
+  padding: 1rem;
+  
+  .detail {
+    display: flex;
+    margin-bottom: 0.6rem;
+    
+    .label {
+      font-weight: 500;
+      min-width: 80px;
+      color: $color-text-secondary;
+    }
+    
+    .quantity {
+      color: $color-accent;
+    }
+  }
+}
+
+.add-product-fab {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: $color-accent;
+  color: white;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: scale(1.1);
+    background: darken($color-accent, 10%);
+  }
+  
+  &:before {
+    content: '+';
+    font-size: 2rem;
+    line-height: 1;
+  }
+}

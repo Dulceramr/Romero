@@ -1,0 +1,13 @@
+<div class="stock-input-container">
+  <input
+    type="number"
+    [value]="value"
+    [min]="min"
+    [max]="max"
+    [disabled]="disabled"
+    [placeholder]="placeholder"
+    (input)="onInput($event)"
+    (blur)="onBlur()"
+    class="stock-input"
+  >
+</div>

@@ -1,0 +1,99 @@
+@use 'src/styles' as *;
+
+.landing-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: rgba($color-bg-light, 0.95);
+}
+
+.lab-header {
+  background: linear-gradient(135deg, $color-primary 0%, darken($color-primary, 10%) 100%);
+  color: white;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: $shadow-md;
+  position: relative;
+  z-index: 10;
+  
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    right: 0;
+    height: 10px;
+    background: linear-gradient(to right, 
+      $color-primary 0%, 
+      $color-secondary 50%, 
+      $color-accent 100%);
+    opacity: 0.7;
+  }
+}
+
+.lab-title {
+  margin: 0;
+  font-size: 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:before {
+    content: '🧪';
+    margin-right: 12px;
+    font-size: 1.8rem;
+  }
+}
+
+.lab-nav {
+  display: flex;
+  justify-content: center;
+  padding: 1.2rem;
+  background-color: white;
+  box-shadow: $shadow-sm;
+  
+  a {
+    display: flex;
+    align-items: center;
+    margin: 0 1.2rem;
+    padding: 0.6rem 1.2rem;
+    color: $color-text-secondary;
+    text-decoration: none;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    
+    &:before {
+      font-family: 'Material Icons';
+      margin-right: 8px;
+      font-size: 1.2rem;
+    }
+    
+    &[routerLink="/stock"]:before {
+      content: 'science';
+      color: $color-primary;
+    }
+    
+    &[routerLink="/stock/orders"]:before {
+      content: 'list_alt';
+      color: $color-secondary;
+    }
+    
+    &:hover {
+      background-color: rgba($color-primary, 0.1);
+    }
+    
+    &.active {
+      background-color: rgba($color-primary, 0.2);
+      color: $color-text-primary;
+    }
+  }
+}
+
+.lab-main-content {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
