@@ -1,33 +1,78 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject, throwError } from 'rxjs';
+import { map, catchError, tap } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { IStock } from '../../../core/models/stock.model';
 
 @Injectable({
-  providedIn: 'root' // Disponible en toda la app (puedes cambiarlo al módulo si prefieres)
+  providedIn: 'root'
 })
 export class StockService {
-  private apiUrl = 'http://localhost:3000/stock'; // URL de JSON Server
+  private apiUrl = 'api/stocks';
+  private stocksSubject = new BehaviorSubject<IStock[]>([]);
+  stocks$ = this.stocksSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
-
-  // Obtener todos los productos
-  getStock(): Observable<IStock[]> {
-    return this.http.get<IStock[]>(this.apiUrl);
+  constructor(
+    private http: HttpClient,
+    private snackBar: MatSnackBar
+  ) {
+    this.loadInitialStocks();
   }
 
-  // Agregar un producto
-  addProduct(product: IStock): Observable<IStock> {
-    return this.http.post<IStock>(this.apiUrl, product);
+  private loadInitialStocks(): void {
+    this.http.get<IStock[]>(this.apiUrl).pipe(
+      catchError(error => {
+        this.showError('Error al cargar los productos');
+        return throwError(error);
+      })
+    ).subscribe({
+      next: (stocks: IStock[]) => this.stocksSubject.next(stocks)
+    });
   }
 
-  // Actualizar un producto
-  updateProduct(id: number, product: Partial<IStock>): Observable<IStock> {
-    return this.http.put<IStock>(`${this.apiUrl}/${id}`, product);
+  addStock(stock: Omit<IStock, 'id'>): Observable<IStock> {
+    return this.http.post<IStock>(this.apiUrl, stock).pipe(
+      tap((newStock: IStock) => {
+        const currentStocks = this.stocksSubject.value;
+        this.stocksSubject.next([...currentStocks, newStock]);
+        this.showSuccess('Producto añadido correctamente');
+      }),
+      catchError(error => {
+        this.showError('Error al añadir el producto');
+        return throwError(error);
+      })
+    );
   }
 
-  // Eliminar un producto (opcional)
-  deleteProduct(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  updateStock(id: number, quantity: number): Observable<IStock> {
+    return this.http.patch<IStock>(`${this.apiUrl}/${id}`, { quantity }).pipe(
+      tap((updatedStock: IStock) => {
+        const currentStocks = this.stocksSubject.value;
+        const updatedStocks = currentStocks.map(stock => 
+          stock.id === id ? { ...stock, quantity } : stock
+        );
+        this.stocksSubject.next(updatedStocks);
+        this.showSuccess('Stock actualizado correctamente');
+      }),
+      catchError(error => {
+        this.showError('Error al actualizar el stock');
+        return throwError(error);
+      })
+    );
+  }
+
+  private showSuccess(message: string): void {
+    this.snackBar.open(message, 'Cerrar', {
+      duration: 3000,
+      panelClass: ['success-snackbar']
+    });
+  }
+
+  private showError(message: string): void {
+    this.snackBar.open(message, 'Cerrar', {
+      duration: 3000,
+      panelClass: ['error-snackbar']
+    });
   }
 }

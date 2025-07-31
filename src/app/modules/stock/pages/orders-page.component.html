@@ -1,10 +1,10 @@
 <form [formGroup]="orderForm" (ngSubmit)="onSubmit()">
   <h2>🧾 Nueva Orden</h2>
 
-  <!-- Selector de producto -->
+  <!-- Selector de producto (usando products en lugar de products$) -->
   <label>Producto:</label>
   <select formControlName="productId">
-    <option *ngFor="let product of products$ | async" [value]="product.id">
+    <option *ngFor="let product of products" [value]="product.id">
       {{ product.name }} ({{ product.quantity }} disponibles)
     </option>
   </select>
@@ -14,7 +14,7 @@
   <app-stock-input 
     type="number" 
     formControlName="quantity"
-    [min]="1">
+    [min]="1"> <!-- Asegúrate que el componente tenga @Input() min -->
   </app-stock-input>
 
   <!-- Destino -->

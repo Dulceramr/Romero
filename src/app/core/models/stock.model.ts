@@ -1,5 +1,8 @@
 export interface IStock {
   id: number;
-  description: string;
+  name: string;
+  description?: string;
   quantity: number;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

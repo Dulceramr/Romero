@@ -1,0 +1,67 @@
+@use 'src/styles' as *;
+
+.order-form {
+  max-width: 600px;
+  margin: 0 auto;
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: $shadow-sm;
+  
+  h2 {
+    color: $color-primary;
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    
+    &:before {
+      content: '🧾';
+      margin-right: 10px;
+    }
+  }
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: $color-text-secondary;
+    font-weight: 500;
+  }
+  
+  select, input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid rgba($color-primary, 0.3);
+    border-radius: 6px;
+    font-family: inherit;
+    
+    &:focus {
+      outline: none;
+      border-color: $color-primary;
+      box-shadow: 0 0 0 2px rgba($color-primary, 0.2);
+    }
+  }
+}
+
+.submit-btn {
+  background: $color-primary;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.3s ease;
+  
+  &:hover {
+    background: darken($color-primary, 10%);
+  }
+  
+  &:disabled {
+    background: $color-text-secondary;
+    cursor: not-allowed;
+  }
+}

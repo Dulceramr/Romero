@@ -1,0 +1,23 @@
+<div class="landing-container">
+  <header class="lab-header">
+    <h1 class="lab-title">Romero</h1>
+    <div class="wave-divider"></div>
+  </header>
+  
+  <nav class="lab-nav">
+    <a routerLink="/stock" routerLinkActive="active">
+      <i class="material-icons">science</i> Stock
+    </a>
+    <a routerLink="/stock/orders" routerLinkActive="active">
+      <i class="material-icons">list_alt</i> Órdenes
+    </a>
+  </nav>
+  
+  <main class="lab-main-content">
+    <router-outlet></router-outlet>
+  </main>
+  
+  <footer class="lab-footer">
+    <p>Sistema de Gestión de Laboratorio</p>
+  </footer>
+</div>
