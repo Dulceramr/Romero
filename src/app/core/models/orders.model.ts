@@ -1,9 +1,11 @@
 export interface Order {
   id?: number;
   productId: number;
-  productName?: string;
+  productName: string;
   quantity: number;
   destination: string;
+  notes?: string;
   status: 'pending' | 'completed' | 'cancelled';
-  createdAt?: Date;
+  createdAt: string;
+  updatedAt?: string;
 }

@@ -1,35 +1,32 @@
-@import '../node_modules/@angular/material/prebuilt-themes/indigo-pink.css';
+@use '@angular/material' as mat;
+@include mat.core();
 
-/* Paleta de colores */
+/* Paleta de colores - Definición SASS */
+$color-primary: #40E0D0;       /* Turquesa */
+$color-secondary: #9370DB;     /* Purple suave */
+$color-accent: #1E90FF;        /* Azul intenso */
+$color-warning: #FF6B6B;       /* Rojo para alertas */
+$color-bg-light: #F8F9FA;      /* Fondo claro */
+$color-bg-dark: #2C3E50;       /* Fondo oscuro */
+$color-text-primary: #343A40;  /* Texto principal */
+$color-text-secondary: #6C757D; /* Texto secundario */
+$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+$shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+$color-bg-hover: rgba(0, 0, 0, 0.04);
+
+/* CSS Custom Properties (opcional) */
 :root {
-  /* Colores principales */
-  --color-primary: #40E0D0;       /* Turquesa */
-  --color-secondary: #9370DB;     /* Purple suave */
-  --color-accent: #1E90FF;        /* Azul intenso */
-  --color-warning: #FF6B6B;       /* Rojo para alertas */
-  
-  /* Tonos neutros */
-  --color-bg-light: #F8F9FA;      /* Fondo claro */
-  --color-bg-dark: #2C3E50;       /* Fondo oscuro */
-  --color-text-primary: #343A40;   /* Texto principal */
-  --color-text-secondary: #6C757D; /* Texto secundario */
-  
-  /* Sombras */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --color-primary: #{$color-primary};
+  --color-secondary: #{$color-secondary};
+  --color-accent: #{$color-accent};
+  --color-warning: #{$color-warning};
+  --color-bg-light: #{$color-bg-light};
+  --color-bg-dark: #{$color-bg-dark};
+  --color-text-primary: #{$color-text-primary};
+  --color-text-secondary: #{$color-text-secondary};
+  --shadow-sm: #{$shadow-sm};
+  --shadow-md: #{$shadow-md};
 }
-
-/* Variables SASS */
-$color-primary: var(--color-primary);
-$color-secondary: var(--color-secondary);
-$color-accent: var(--color-accent);
-$color-warning: var(--color-warning);
-$color-bg-light: var(--color-bg-light);
-$color-bg-dark: var(--color-bg-dark);
-$color-text-primary: var(--color-text-primary);
-$color-text-secondary: var(--color-text-secondary);
-$shadow-sm: var(--shadow-sm);
-$shadow-md: var(--shadow-md);
 
 /* Estilos globales */
 body {
@@ -37,7 +34,6 @@ body {
   margin: 0;
   background-color: $color-bg-light;
   color: $color-text-primary;
-  //background-image: url('assets/molecular-pattern.png');
   background-color: #9470dba2;
   background-blend-mode: overlay;
   background-size: 300px;
