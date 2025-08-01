@@ -5,6 +5,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatChipsModule } from '@angular/material/chips';
+import { HomeComponent } from '../modules/stock/components/home.component';
 
 interface NavLink {
   path: string;
@@ -21,7 +22,8 @@ interface NavLink {
     MatToolbarModule,
     MatIconModule,
     MatTabsModule,
-    MatChipsModule
+    MatChipsModule,
+    HomeComponent,
   ],
   templateUrl: './landing-page.component.html',
   styleUrl: './landing-page.component.scss'
