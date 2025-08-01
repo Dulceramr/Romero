@@ -1,21 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Order } from '../../../core/models/orders.model';
 import { OrdersService } from '../services/orders.service';
 import { IStock } from '../../../core/models/stock.model';
 import { StockService } from '../services/stock.service';
-import { switchMap, tap, catchError, finalize } from 'rxjs/operators';
-import { EMPTY } from 'rxjs';
+import { switchMap, tap, catchError, finalize, takeUntil } from 'rxjs/operators';
+import { EMPTY, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-orders-page',
   templateUrl: './orders-page.component.html',
   styleUrls: ['./orders-page.component.scss']
 })
-export class OrdersPageComponent implements OnInit {
+export class OrdersPageComponent implements OnInit, OnDestroy {
   orderForm: FormGroup;
   stockItems: IStock[] = [];
   isLoading = false;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -35,22 +36,31 @@ export class OrdersPageComponent implements OnInit {
     this.setupFormListeners();
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   loadStockItems(): void {
     this.isLoading = true;
-    this.stockService.getStockItems().subscribe({
-      next: (items) => {
-        this.stockItems = items;
+    this.stockService.stocks$.pipe(
+      takeUntil(this.destroy$),
+      tap(stocks => {
+        this.stockItems = stocks;
         this.isLoading = false;
-      },
-      error: (err) => {
+      }),
+      catchError(err => {
         console.error('Error loading stock items', err);
         this.isLoading = false;
-      }
-    });
+        return EMPTY;
+      })
+    ).subscribe();
   }
 
   setupFormListeners(): void {
-    this.orderForm.get('productId')?.valueChanges.subscribe(() => {
+    this.orderForm.get('productId')?.valueChanges.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
       this.updateQuantityValidator();
     });
   }
@@ -97,7 +107,7 @@ export class OrdersPageComponent implements OnInit {
           alert(`Orden creada para ${createdOrder.quantity} unidades de ${createdOrder.productName}`);
         }),
         switchMap(createdOrder => {
-          return this.stockService.updateStock(
+          return this.stockService.updateProductQuantity(
             createdOrder.productId, 
             -createdOrder.quantity
           ).pipe(
@@ -116,7 +126,8 @@ export class OrdersPageComponent implements OnInit {
         finalize(() => {
           this.isLoading = false;
           this.resetForm();
-        })
+        }),
+        takeUntil(this.destroy$)
       ).subscribe();
     }
   }

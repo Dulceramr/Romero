@@ -1,9 +1,9 @@
-import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Subject, takeUntil, catchError, EMPTY, forkJoin, tap, Observable } from 'rxjs';
+import { Subject, takeUntil, finalize } from 'rxjs';
 import { IStock } from '../../../core/models/stock.model';
 import { StockService } from '../services/stock.service';
 
@@ -12,22 +12,17 @@ import { StockService } from '../services/stock.service';
   templateUrl: './stock-page.component.html',
   styleUrls: ['./stock-page.component.scss']
 })
-export class StockPageComponent implements OnInit, OnDestroy, AfterViewInit {
-  // Material Table properties
-  dataSource = new MatTableDataSource<IStock>();
-  displayedColumns: string[] = ['name', 'description', 'quantity'];
+export class StockPageComponent implements OnInit, OnDestroy {
+  public dataSource = new MatTableDataSource<IStock>();
+  public displayedColumns: string[] = ['name', 'description', 'quantity'];
+  public addProductForm: FormGroup;
+  public stockForm: FormGroup;  // Cambiado a public
+  public isLoading = false;
+  public error: string | null = null;
 
-  // ViewChild decorators to get references to the paginator and sort
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  // Form properties
-  stockForm: FormGroup;
-
-  // State management properties
-  isLoading = true;
-  error: string | null = null;
-  
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -37,110 +32,102 @@ export class StockPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.stockForm = this.fb.group({
       products: this.fb.array([])
     });
+
+    this.addProductForm = this.fb.group({
+      name: ['', Validators.required],
+      description: [''],
+      quantity: [0, [Validators.required, Validators.min(0)]]
+    });
   }
 
   ngOnInit(): void {
-    this.loadStockData();
+    this.loadStockData();  // Cambiado de initializeData()
   }
 
   ngAfterViewInit(): void {
-    // These need to be set after the view has been initialized
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
-  
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
-get products(): FormArray {
-  return this.stockForm.get('products') as FormArray;
-}
-
-  loadStockData(): void {
+  public loadStockData(): void {  // Renombrado y hecho público
     this.isLoading = true;
     this.error = null;
-    this.stockService.getStockItems().pipe(
+
+    this.stockService.stocks$.pipe(
       takeUntil(this.destroy$),
-      tap(stocks => {
+      finalize(() => this.isLoading = false)
+    ).subscribe({
+      next: stocks => {
         this.dataSource.data = stocks;
-        this.buildForm(stocks);
-        this.isLoading = false;
-      }),
-      catchError(() => {
-        this.error = 'Failed to load stock data. Please try again later.';
-        this.isLoading = false;
-        return EMPTY;
-      })
-    ).subscribe();
-  }
-
-buildForm(stocks: IStock[]): void {
-  // Limpiar el FormArray de manera segura
-  while (this.products.length !== 0) {
-    this.products.removeAt(0);
-  }
-
-  // Agregar nuevos controles
-  stocks.forEach(stock => {
-    const productGroup = this.fb.group({
-      id: [stock.id],
-      quantity: [stock.quantity]
+        this.buildFormControls(stocks);
+      },
+      error: err => this.error = 'Failed to load stock data'
     });
-    this.products.push(productGroup);
-  });
-}
+  }
 
-  applyFilter(event: Event): void {
+  private buildFormControls(stocks: IStock[]): void {
+    const formArray = this.stockForm.get('products') as FormArray;
+    formArray.clear();
+    
+    stocks.forEach(stock => {
+      formArray.push(this.fb.group({
+        id: [stock.id],
+        quantity: [stock.quantity, [Validators.required, Validators.min(0)]]
+      }));
+    });
+  }
+
+  public onAddProduct(): void {
+    if (this.addProductForm.invalid) return;
+
+    this.isLoading = true;
+    this.stockService.addProduct(this.addProductForm.value).pipe(
+      takeUntil(this.destroy$),
+      finalize(() => this.isLoading = false)
+    ).subscribe({
+      next: () => this.addProductForm.reset(),
+      error: () => this.error = 'Failed to add product'
+    });
+  }
+
+  public onSaveChanges(): void {
+    if (this.stockForm.invalid || !this.stockForm.dirty) return;
+
+    const updates = (this.stockForm.get('products') as FormArray).controls
+      .filter(control => control.dirty)
+      .map(control => ({
+        id: control.get('id')?.value,
+        quantity: control.get('quantity')?.value
+      }));
+
+    if (updates.length === 0) return;
+
+    this.isLoading = true;
+    this.stockService.batchUpdate(updates).pipe(
+      takeUntil(this.destroy$),
+      finalize(() => this.isLoading = false)
+    ).subscribe({
+      next: () => this.stockForm.markAsPristine(),
+      error: () => this.error = 'Failed to update products'
+    });
+  }
+
+  public applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+    this.dataSource.paginator?.firstPage();
   }
 
-  saveChanges(): void {
-    if (this.stockForm.invalid || !this.stockForm.dirty) {
-    return;
+  get productsFormArray(): FormArray {
+    return this.stockForm.get('products') as FormArray;
   }
 
-  this.isLoading = true;
-  const updateObservables: Observable<any>[] = []; // Tipo explícito aquí
-
-  this.products.controls.forEach(control => {
-    if (control.dirty) {
-      const productId = control.get('id')?.value;
-      const newQuantity = control.get('quantity')?.value;
-      if (productId && newQuantity !== undefined) {
-        updateObservables.push(
-          this.stockService.updateStock(productId, newQuantity)
-        );
-      }
-    }
-    });
-
-    if (updateObservables.length > 0) {
-      forkJoin(updateObservables).pipe(
-        takeUntil(this.destroy$),
-        catchError(() => {
-          // The service already shows a snackbar for individual errors
-          return EMPTY;
-        }),
-      ).subscribe(() => {
-        this.stockForm.markAsPristine();
-        this.isLoading = false;
-        // Optionally, reload data to confirm sync with backend
-        // this.loadStockData(); 
-      });
-    } else {
-      this.isLoading = false;
-    }
-  }
-
-  // Helper to get total products count, respecting filter
   get totalProducts(): number {
-    return this.dataSource?.filteredData?.length || 0;
+    return this.dataSource.filteredData.length;
   }
 }

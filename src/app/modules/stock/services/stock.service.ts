@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, throwError } from 'rxjs';
-import { map, catchError, tap, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, throwError, forkJoin } from 'rxjs';
+import { catchError, tap, switchMap, take, map } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IStock } from '../../../core/models/stock.model';
 
@@ -9,77 +9,73 @@ import { IStock } from '../../../core/models/stock.model';
   providedIn: 'root'
 })
 export class StockService {
-  private apiUrl = 'http://localhost:3000/stock'; 
-  private stocksSubject = new BehaviorSubject<IStock[]>([]);
-  stocks$ = this.stocksSubject.asObservable();
+  private readonly apiUrl = 'http://localhost:3000/stock';
+  private readonly stocksSubject = new BehaviorSubject<IStock[]>([]);
+  public readonly stocks$ = this.stocksSubject.asObservable();
 
   constructor(
     private http: HttpClient,
     private snackBar: MatSnackBar
   ) {
-    this.loadInitialStocks();
+    this.loadInitialData();
   }
 
-  private loadInitialStocks(): void {
-    this.http.get<IStock[]>(this.apiUrl).pipe(
-      catchError(error => {
-        this.showError('Error al cargar los productos');
-        return throwError(error);
-      })
-    ).subscribe({
-      next: (stocks: IStock[]) => this.stocksSubject.next(stocks)
-    });
+  private loadInitialData(): void {
+    this.fetchAllStockItems().subscribe();
   }
 
-  addStock(stock: Omit<IStock, 'id'>): Observable<IStock> {
-    return this.http.post<IStock>(this.apiUrl, stock).pipe(
-      tap((newStock: IStock) => {
-        const currentStocks = this.stocksSubject.value;
-        this.stocksSubject.next([...currentStocks, newStock]);
-        this.showSuccess('Producto añadido correctamente');
-      }),
-      catchError(error => {
-        this.showError('Error al añadir el producto');
-        return throwError(error);
-      })
+  private fetchAllStockItems(): Observable<IStock[]> {
+    return this.http.get<IStock[]>(this.apiUrl).pipe(
+      tap(stocks => this.stocksSubject.next(stocks)),
+      catchError(error => this.handleError('Error loading stock items', error))
     );
   }
 
-  getStockItems(): Observable<IStock[]> {
-  return this.stocks$.pipe(
-    catchError(error => {
-      this.showError('Error al obtener los productos');
-      return throwError(error);
-    })
-  );
-}
-
-updateStock(id: number, quantityDelta: number): Observable<IStock> {
-  return this.http.get<IStock>(`${this.apiUrl}/${id}`).pipe(
-    switchMap(currentStock => {
-      const newQuantity = currentStock.quantity + quantityDelta;
-      return this.http.patch<IStock>(`${this.apiUrl}/${id}`, { 
-        quantity: newQuantity 
-      });
-    }),
-    catchError(error => {
-      this.showError('Error al actualizar el stock');
-      return throwError(error);
-    })
-  );
-}
-
-  private showSuccess(message: string): void {
-    this.snackBar.open(message, 'Cerrar', {
-      duration: 3000,
-      panelClass: ['success-snackbar']
-    });
+  public addProduct(product: Omit<IStock, 'id'>): Observable<IStock> {
+    return this.http.post<IStock>(this.apiUrl, product).pipe(
+      tap(newProduct => {
+        this.stocksSubject.next([...this.stocksSubject.value, newProduct]);
+        this.showNotification('Product added successfully', 'success');
+      }),
+      catchError(error => this.handleError('Error adding product', error))
+    );
   }
 
-  private showError(message: string): void {
-    this.snackBar.open(message, 'Cerrar', {
+  public updateProductQuantity(id: number, quantityDelta: number): Observable<IStock> {
+    return this.http.get<IStock>(`${this.apiUrl}/${id}`).pipe(
+      switchMap(currentProduct => {
+        const newQuantity = currentProduct.quantity + quantityDelta;
+        return this.http.patch<IStock>(`${this.apiUrl}/${id}`, { quantity: newQuantity }).pipe(
+          tap(updatedProduct => {
+            const updatedItems = this.stocksSubject.value.map(item => 
+              item.id === id ? { ...item, quantity: newQuantity } : item
+            );
+            this.stocksSubject.next(updatedItems);
+            this.showNotification('Quantity updated successfully', 'success');
+          })
+        );
+      }),
+      catchError(error => this.handleError('Error updating quantity', error))
+    );
+  }
+
+  public batchUpdate(updates: {id: number, quantity: number}[]): Observable<IStock[]> {
+    const updateRequests = updates.map(update => 
+      this.updateProductQuantity(update.id, update.quantity)
+    );
+    return forkJoin(updateRequests);
+  }
+
+  private handleError(message: string, error: any): Observable<never> {
+    this.showNotification(message, 'error');
+    console.error(message, error);
+    return throwError(() => new Error(message));
+  }
+
+  private showNotification(message: string, type: 'success' | 'error'): void {
+    this.snackBar.open(message, 'Close', {
       duration: 3000,
-      panelClass: ['error-snackbar']
+      panelClass: [`${type}-snackbar`]
     });
   }
 }
