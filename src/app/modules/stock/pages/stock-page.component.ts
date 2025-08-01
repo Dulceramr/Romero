@@ -14,16 +14,13 @@ import { StockService } from '../services/stock.service';
 })
 export class StockPageComponent implements OnInit, OnDestroy {
   dataSource = new MatTableDataSource<IStock>();
-  displayedColumns: string[] = ['name', 'description', 'quantity', 'actions'];
+  displayedColumns: string[] = ['name', 'description', 'quantity'];
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   stockForm: FormGroup;
   addProductForm: FormGroup;
-  
-  isLoading = false;
-  error: string | null = null;
   
   private destroy$ = new Subject<void>();
 
@@ -44,6 +41,9 @@ export class StockPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadStockData();
+    
+    this.stockService.loading.pipe(takeUntil(this.destroy$)).subscribe();
+    this.stockService.error.pipe(takeUntil(this.destroy$)).subscribe();
   }
 
   ngAfterViewInit(): void {
@@ -57,22 +57,15 @@ export class StockPageComponent implements OnInit, OnDestroy {
   }
 
   loadStockData(): void {
-    this.isLoading = true;
-    this.error = null;
-    
-    this.stockService.loadStockItems();
-    
-    this.stockService.state$.pipe(
+    this.stockService.getStockItems().pipe(
       takeUntil(this.destroy$)
     ).subscribe({
-      next: (state) => {
-        this.dataSource.data = state.stocks;
-        this.buildForm(state.stocks);
-        this.isLoading = false;
+      next: (stocks: IStock[]) => {
+        this.dataSource.data = stocks;
+        this.buildForm(stocks);
       },
       error: (err: Error) => {
-        this.error = 'Error loading stock data';
-        this.isLoading = false;
+        console.error('Error loading stock data', err);
       }
     });
   }
@@ -100,26 +93,22 @@ export class StockPageComponent implements OnInit, OnDestroy {
   addProduct(): void {
     if (this.addProductForm.invalid) return;
     
-    this.isLoading = true;
-    this.stockService.addStockItem(this.addProductForm.value)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: () => {
-          this.addProductForm.reset();
-          this.isLoading = false;
-        },
-        error: (err: Error) => {
-          this.error = 'Error adding product';
-          this.isLoading = false;
-        }
-      });
+    const newProduct = this.addProductForm.value;
+    this.stockService.addStock(newProduct).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: () => {
+        this.addProductForm.reset();
+        this.addProductForm.get('quantity')?.setValue(0);
+      },
+      error: (err: Error) => {
+        console.error('Error adding product', err);
+      }
+    });
   }
 
   saveChanges(): void {
-    if (this.stockForm.invalid || !this.stockForm.dirty || this.isLoading) return;
-
-    this.isLoading = true;
-    this.error = null;
+    if (this.stockForm.invalid || !this.stockForm.dirty) return;
 
     const updates = this.products.controls
       .filter(control => control.dirty)
@@ -128,26 +117,41 @@ export class StockPageComponent implements OnInit, OnDestroy {
         quantity: control.get('quantity')?.value as number
       }));
 
-    if (updates.length === 0) {
-      this.isLoading = false;
-      return;
-    }
+    if (updates.length === 0) return;
 
-    this.stockService.batchUpdateStocks(updates)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: () => {
-          this.stockForm.markAsPristine();
-          this.isLoading = false;
-        },
-        error: (err: Error) => {
-          this.error = 'Error saving changes';
-          this.isLoading = false;
-        }
-      });
+    if (updates.length === 1) {
+      this.stockService.updateStock(updates[0].id, updates[0].quantity).pipe(
+        takeUntil(this.destroy$)
+      ).subscribe();
+    } else {
+      this.stockService.batchUpdateStocks(updates).pipe(
+        takeUntil(this.destroy$)
+      ).subscribe();
+    }
   }
+
+  deleteProduct(id: number): void {
+  this.stockService.deleteStock(id).pipe(
+    takeUntil(this.destroy$)
+  ).subscribe({
+    next: () => {
+      this.loadStockData();
+    },
+    error: (err: Error) => {
+      console.error('Error deleting product', err);
+    }
+  });
+}
 
   get totalProducts(): number {
     return this.dataSource?.filteredData?.length || 0;
+  }
+
+  get isLoading(): boolean {
+    return this.stockService.loading.value;
+  }
+
+  get error(): string | null {
+    return this.stockService.error.value;
   }
 }

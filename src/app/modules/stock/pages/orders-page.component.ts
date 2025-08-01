@@ -23,7 +23,7 @@ export class OrdersPageComponent implements OnInit {
     private ordersService: OrdersService
   ) {
     this.orderForm = this.fb.group({
-      productId: ['', Validators.required],
+      productId: [null, Validators.required],
       quantity: [1, [Validators.required, Validators.min(1)]],
       destination: ['', Validators.required],
       notes: ['']
@@ -35,22 +35,19 @@ export class OrdersPageComponent implements OnInit {
     this.setupFormListeners();
   }
 
-  loadStockItems(): void {
-    this.isLoading = true;
-    // Usamos el observable de estado del StockService
-    this.stockService.state$.subscribe({
-      next: (state) => {
-        this.stockItems = state.stocks;
-        this.isLoading = false;
-      },
-      error: (error: Error) => {
-        console.error('Error loading stock items:', error.message);
-        this.isLoading = false;
-      }
-    });
-    // Disparamos la carga de items
-    this.stockService.loadStockItems();
-  }
+loadStockItems(): void {
+  this.isLoading = true;
+  this.stockService.getStockItems().subscribe({
+    next: (stocks: IStock[]) => {
+      this.stockItems = stocks;
+      this.isLoading = false;
+    },
+    error: (error) => {
+      console.error('Error:', error);
+      this.isLoading = false;
+    }
+  });
+}
 
   setupFormListeners(): void {
     this.orderForm.get('productId')?.valueChanges.subscribe(() => {
@@ -85,7 +82,7 @@ export class OrdersPageComponent implements OnInit {
       const selectedProduct = this.getSelectedProduct();
 
       const orderData: Order = {
-        productId: this.orderForm.value.productId,
+        productId: Number(this.orderForm.value.productId),
         productName: selectedProduct?.name || '',
         quantity: this.orderForm.value.quantity,
         destination: this.orderForm.value.destination,
@@ -95,31 +92,28 @@ export class OrdersPageComponent implements OnInit {
       };
 
       this.ordersService.createOrder(orderData).pipe(
-        tap((createdOrder: Order) => {
-          console.log('Orden creada:', createdOrder);
+        tap(createdOrder => {
           alert(`Orden creada para ${createdOrder.quantity} unidades de ${createdOrder.productName}`);
         }),
-        switchMap((createdOrder: Order) => {
+        switchMap(createdOrder => {
           return this.stockService.updateStockQuantity(
-            createdOrder.productId, 
+            Number(createdOrder.productId), 
             -createdOrder.quantity
           ).pipe(
-            catchError((error: Error) => {
-              console.error('Error actualizando stock:', error.message);
+            catchError(error => {
               alert('Orden creada pero error actualizando stock');
               return EMPTY;
             })
           );
         }),
-        catchError((error: Error) => {
-          console.error('Error creando orden:', error.message);
+        catchError(error => {
           alert('Error al crear la orden');
           return EMPTY;
         }),
         finalize(() => {
           this.isLoading = false;
           this.resetForm();
-          this.loadStockItems(); // Recargar stock después de la operación
+          this.loadStockItems();
         })
       ).subscribe();
     }
