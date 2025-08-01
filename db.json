@@ -40,22 +40,12 @@
       "status": "pending",
       "createdAt": "2025-08-01T04:04:12.419Z"
     },
-    {
-      "id": "30ff",
-      "productId": "5",
-      "productName": "Reactivo químico X-21",
-      "quantity": 1,
-      "destination": "pruebaaaaaaa 1000",
-      "notes": "jkbmmn m",
-      "status": "pending",
-      "createdAt": "2025-08-01T15:52:58.856Z"
-    }
   ],
   "stock": [
     {
       "id": "1",
       "name": "Tubos de ensayo (50ml)",
-      "quantity": 100,
+      "quantity": 1100,
       "category": "Materiales",
       "location": "Almacén A"
     },
@@ -69,14 +59,14 @@
     {
       "id": "3",
       "name": "Microscopios digitales",
-      "quantity": 15,
+      "quantity": 10,
       "category": "Instrumentos",
       "location": "Laboratorio Central"
     },
     {
       "id": "4",
       "name": "Batas de laboratorio (talla M)",
-      "quantity": 70,
+      "quantity": 80,
       "category": "Indumentaria",
       "location": "Almacén C"
     },
