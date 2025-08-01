@@ -1,23 +1,37 @@
-<div class="landing-container">
-  <header class="lab-header">
-    <h1 class="lab-title">Romero</h1>
-    <div class="wave-divider"></div>
-  </header>
+<div class="landing-container mat-typography">
+  <!-- Header -->
+  <mat-toolbar class="lab-header mat-elevation-z6">
+    <div class="header-content">
+      <span class="lab-title">
+        <mat-icon class="title-icon">science</mat-icon>
+        Romero
+      </span>
+      <div class="wave-divider"></div>
+    </div>
+  </mat-toolbar>
   
-  <nav class="lab-nav">
-    <a routerLink="/stock" routerLinkActive="active">
-      <i class="material-icons">science</i> Stock
-    </a>
-    <a routerLink="/stock/orders" routerLinkActive="active">
-      <i class="material-icons">list_alt</i> Órdenes
+  <!-- Navigation -->
+  <nav mat-tab-nav-bar class="lab-nav mat-elevation-z2">
+    <a mat-tab-link
+       *ngFor="let link of navLinks"
+       [routerLink]="link.path"
+       routerLinkActive #rla="routerLinkActive"
+       [active]="rla.isActive">
+      <mat-icon class="nav-icon">{{link.icon}}</mat-icon>
+      {{link.label}}
     </a>
   </nav>
   
+  <!-- Main content area -->
   <main class="lab-main-content">
     <router-outlet></router-outlet>
   </main>
   
-  <footer class="lab-footer">
-    <p>Sistema de Gestión de Laboratorio</p>
+  <!-- Footer -->
+  <footer class="lab-footer mat-elevation-z6">
+      <mat-chip color="primary" selected>
+        <mat-icon>biotech</mat-icon>
+        Sistema de Gestión de Laboratorio
+      </mat-chip>
   </footer>
 </div>
