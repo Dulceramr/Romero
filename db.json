@@ -39,6 +39,16 @@
       "notes": "prueba 4",
       "status": "pending",
       "createdAt": "2025-08-01T04:04:12.419Z"
+    },
+    {
+      "id": "30ff",
+      "productId": "5",
+      "productName": "Reactivo químico X-21",
+      "quantity": 1,
+      "destination": "pruebaaaaaaa 1000",
+      "notes": "jkbmmn m",
+      "status": "pending",
+      "createdAt": "2025-08-01T15:52:58.856Z"
     }
   ],
   "stock": [
@@ -73,7 +83,7 @@
     {
       "id": "5",
       "name": "Reactivo químico X-21",
-      "quantity": 30,
+      "quantity": 29,
       "category": "Reactivos",
       "location": "Almacén A"
     },
