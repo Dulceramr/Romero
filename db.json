@@ -45,7 +45,7 @@
     {
       "id": "1",
       "name": "Tubos de ensayo (50ml)",
-      "quantity": 1101,
+      "quantity": 1104,
       "category": "Materiales",
       "location": "Almacén A"
     },
@@ -94,7 +94,7 @@
     {
       "id": "8",
       "name": "Pipetas automáticas (1-10µl)",
-      "quantity": 60,
+      "quantity": -1,
       "category": "Materiales",
       "location": "Almacén A"
     },
