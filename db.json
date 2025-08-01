@@ -49,13 +49,23 @@
       "notes": "ghghggh",
       "status": "pending",
       "createdAt": "2025-08-01T18:51:33.908Z"
+    },
+    {
+      "id": "03f5",
+      "productId": 8,
+      "productName": "Pipetas automáticas (1-10µl)",
+      "quantity": 1,
+      "destination": "dsfsdfdsf",
+      "notes": "sdf",
+      "status": "pending",
+      "createdAt": "2025-08-01T19:13:08.779Z"
     }
   ],
   "stock": [
     {
       "id": "1",
       "name": "Tubos de ensayo (50ml)",
-      "quantity": 1101,
+      "quantity": 1104,
       "category": "Materiales",
       "location": "Almacén A"
     },
@@ -104,7 +114,7 @@
     {
       "id": "8",
       "name": "Pipetas automáticas (1-10µl)",
-      "quantity": 60,
+      "quantity": -1,
       "category": "Materiales",
       "location": "Almacén A"
     },
