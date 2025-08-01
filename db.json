@@ -40,16 +40,6 @@
       "status": "pending",
       "createdAt": "2025-08-01T04:04:12.419Z"
     },
-    {
-      "id": "367f",
-      "productId": "3",
-      "productName": "Microscopios digitales",
-      "quantity": 5,
-      "destination": "nhvm",
-      "notes": "mjhb,jn,",
-      "status": "pending",
-      "createdAt": "2025-08-01T12:34:59.767Z"
-    }
   ],
   "stock": [
     {
@@ -83,7 +73,7 @@
     {
       "id": "5",
       "name": "Reactivo químico X-21",
-      "quantity": 30,
+      "quantity": 29,
       "category": "Reactivos",
       "location": "Almacén A"
     },
