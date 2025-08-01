@@ -37,16 +37,19 @@ export class OrdersPageComponent implements OnInit {
 
   loadStockItems(): void {
     this.isLoading = true;
-    this.stockService.getStockItems().subscribe({
-      next: (items) => {
-        this.stockItems = items;
+    // Usamos el observable de estado del StockService
+    this.stockService.state$.subscribe({
+      next: (state) => {
+        this.stockItems = state.stocks;
         this.isLoading = false;
       },
-      error: (err) => {
-        console.error('Error loading stock items', err);
+      error: (error: Error) => {
+        console.error('Error loading stock items:', error.message);
         this.isLoading = false;
       }
     });
+    // Disparamos la carga de items
+    this.stockService.loadStockItems();
   }
 
   setupFormListeners(): void {
@@ -92,30 +95,31 @@ export class OrdersPageComponent implements OnInit {
       };
 
       this.ordersService.createOrder(orderData).pipe(
-        tap(createdOrder => {
+        tap((createdOrder: Order) => {
           console.log('Orden creada:', createdOrder);
           alert(`Orden creada para ${createdOrder.quantity} unidades de ${createdOrder.productName}`);
         }),
-        switchMap(createdOrder => {
-          return this.stockService.updateStock(
+        switchMap((createdOrder: Order) => {
+          return this.stockService.updateStockQuantity(
             createdOrder.productId, 
             -createdOrder.quantity
           ).pipe(
-            catchError(stockError => {
-              console.error('Error actualizando stock:', stockError);
+            catchError((error: Error) => {
+              console.error('Error actualizando stock:', error.message);
               alert('Orden creada pero error actualizando stock');
               return EMPTY;
             })
           );
         }),
-        catchError(orderError => {
-          console.error('Error creando orden:', orderError);
+        catchError((error: Error) => {
+          console.error('Error creando orden:', error.message);
           alert('Error al crear la orden');
           return EMPTY;
         }),
         finalize(() => {
           this.isLoading = false;
           this.resetForm();
+          this.loadStockItems(); // Recargar stock después de la operación
         })
       ).subscribe();
     }
