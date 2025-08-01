@@ -45,7 +45,7 @@
     {
       "id": "1",
       "name": "Tubos de ensayo (50ml)",
-      "quantity": 1100,
+      "quantity": 1101,
       "category": "Materiales",
       "location": "Almacén A"
     },
@@ -66,21 +66,21 @@
     {
       "id": "4",
       "name": "Batas de laboratorio (talla M)",
-      "quantity": 80,
+      "quantity": 79,
       "category": "Indumentaria",
       "location": "Almacén C"
     },
     {
       "id": "5",
       "name": "Reactivo químico X-21",
-      "quantity": 29,
+      "quantity": 30,
       "category": "Reactivos",
       "location": "Almacén A"
     },
     {
       "id": "6",
       "name": "Mascarillas N95",
-      "quantity": 300,
+      "quantity": 100,
       "category": "Seguridad",
       "location": "Almacén B"
     },
