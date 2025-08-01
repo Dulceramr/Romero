@@ -1,70 +1,112 @@
 {
+  "orders": [
+    {
+      "id": "6557",
+      "productId": "1",
+      "productName": "Tubos de ensayo (50ml)",
+      "quantity": 1,
+      "destination": "cu",
+      "notes": "prueba1",
+      "status": "pending",
+      "createdAt": "2025-08-01T03:02:17.660Z"
+    },
+    {
+      "id": "5574",
+      "productId": "2",
+      "productName": "",
+      "quantity": 1,
+      "destination": "unam",
+      "notes": "prueba2",
+      "status": "pending",
+      "createdAt": "2025-08-01T03:17:12.255Z"
+    },
+    {
+      "id": "4a68",
+      "productId": "4",
+      "productName": "Batas de laboratorio (talla M)",
+      "quantity": 1,
+      "destination": "asd",
+      "notes": "prueba 3",
+      "status": "pending",
+      "createdAt": "2025-08-01T04:02:40.653Z"
+    },
+    {
+      "id": "c961",
+      "productId": "4",
+      "productName": "Batas de laboratorio (talla M)",
+      "quantity": 4,
+      "destination": "sdasd",
+      "notes": "prueba 4",
+      "status": "pending",
+      "createdAt": "2025-08-01T04:04:12.419Z"
+    }
+  ],
   "stock": [
     {
-      "id": 1,
+      "id": "1",
       "name": "Tubos de ensayo (50ml)",
       "quantity": 100,
       "category": "Materiales",
       "location": "Almacén A"
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "Guantes de nitrilo",
       "quantity": 250,
       "category": "Seguridad",
       "location": "Almacén B"
     },
     {
-      "id": 3,
+      "id": "3",
       "name": "Microscopios digitales",
       "quantity": 15,
       "category": "Instrumentos",
       "location": "Laboratorio Central"
     },
     {
-      "id": 4,
+      "id": "4",
       "name": "Batas de laboratorio (talla M)",
-      "quantity": 75,
+      "quantity": 70,
       "category": "Indumentaria",
       "location": "Almacén C"
     },
     {
-      "id": 5,
+      "id": "5",
       "name": "Reactivo químico X-21",
       "quantity": 30,
       "category": "Reactivos",
       "location": "Almacén A"
     },
     {
-      "id": 6,
+      "id": "6",
       "name": "Mascarillas N95",
       "quantity": 300,
       "category": "Seguridad",
       "location": "Almacén B"
     },
     {
-      "id": 7,
+      "id": "7",
       "name": "Centrífuga de mesa",
       "quantity": 8,
       "category": "Instrumentos",
       "location": "Laboratorio Central"
     },
     {
-      "id": 8,
+      "id": "8",
       "name": "Pipetas automáticas (1-10µl)",
       "quantity": 60,
       "category": "Materiales",
       "location": "Almacén A"
     },
     {
-      "id": 9,
+      "id": "9",
       "name": "Gafas de seguridad",
       "quantity": 120,
       "category": "Seguridad",
       "location": "Almacén B"
     },
     {
-      "id": 10,
+      "id": "10",
       "name": "Placas Petri (estériles)",
       "quantity": 200,
       "category": "Materiales",

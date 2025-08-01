@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, throwError } from 'rxjs';
-import { map, catchError, tap } from 'rxjs/operators';
+import { map, catchError, tap, switchMap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IStock } from '../../../core/models/stock.model';
 
@@ -54,22 +54,20 @@ export class StockService {
   );
 }
 
-  updateStock(id: number, quantity: number): Observable<IStock> {
-    return this.http.patch<IStock>(`${this.apiUrl}/${id}`, { quantity }).pipe(
-      tap((updatedStock: IStock) => {
-        const currentStocks = this.stocksSubject.value;
-        const updatedStocks = currentStocks.map(stock => 
-          stock.id === id ? { ...stock, quantity } : stock
-        );
-        this.stocksSubject.next(updatedStocks);
-        this.showSuccess('Stock actualizado correctamente');
-      }),
-      catchError(error => {
-        this.showError('Error al actualizar el stock');
-        return throwError(error);
-      })
-    );
-  }
+updateStock(id: number, quantityDelta: number): Observable<IStock> {
+  return this.http.get<IStock>(`${this.apiUrl}/${id}`).pipe(
+    switchMap(currentStock => {
+      const newQuantity = currentStock.quantity + quantityDelta;
+      return this.http.patch<IStock>(`${this.apiUrl}/${id}`, { 
+        quantity: newQuantity 
+      });
+    }),
+    catchError(error => {
+      this.showError('Error al actualizar el stock');
+      return throwError(error);
+    })
+  );
+}
 
   private showSuccess(message: string): void {
     this.snackBar.open(message, 'Cerrar', {
