@@ -1,67 +1,88 @@
-@use 'src/styles' as *;
+@use '../../../../styles.scss' as *;
+.order-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
 
 .order-form {
-  max-width: 600px;
-  margin: 0 auto;
   background: white;
   padding: 2rem;
-  border-radius: 10px;
-  box-shadow: $shadow-sm;
-  
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+
   h2 {
-    color: $color-primary;
+    color: #7b1fa2;
     margin-top: 0;
-    display: flex;
-    align-items: center;
-    
-    &:before {
-      content: '🧾';
-      margin-right: 10px;
-    }
+    margin-bottom: 1.5rem;
   }
 }
 
 .form-group {
   margin-bottom: 1.5rem;
-  
+
   label {
     display: block;
     margin-bottom: 0.5rem;
-    color: $color-text-secondary;
     font-weight: 500;
   }
-  
-  select, input {
-    width: 100%;
-    padding: 0.8rem;
-    border: 1px solid rgba($color-primary, 0.3);
-    border-radius: 6px;
-    font-family: inherit;
-    
-    &:focus {
-      outline: none;
-      border-color: $color-primary;
-      box-shadow: 0 0 0 2px rgba($color-primary, 0.2);
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+
+  &:disabled {
+    background-color: #f5f5f5;
+  }
+}
+
+.error-text {
+  color: #f44336;
+  font-size: 0.8rem;
+}
+
+.loading-message {
+  color: #7b1fa2;
+  font-style: italic;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+
+  button {
+    padding: 0.8rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    border: none;
+
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
     }
   }
 }
 
-.submit-btn {
-  background: $color-primary;
+.primary-btn {
+  background-color: #7b1fa2;
   color: white;
-  border: none;
-  padding: 0.8rem 1.5rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background 0.3s ease;
-  
-  &:hover {
-    background: darken($color-primary, 10%);
+
+  &:hover:not(:disabled) {
+    background-color: darken(#7b1fa2, 10%);
   }
-  
-  &:disabled {
-    background: $color-text-secondary;
-    cursor: not-allowed;
+}
+
+.secondary-btn {
+  background-color: #f5f5f5;
+  color: #333;
+
+  &:hover:not(:disabled) {
+    background-color: darken(#f5f5f5, 10%);
   }
 }

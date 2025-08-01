@@ -9,7 +9,7 @@ import { IStock } from '../../../core/models/stock.model';
   providedIn: 'root'
 })
 export class StockService {
-  private apiUrl = 'api/stocks';
+  private apiUrl = 'http://localhost:3000/stock'; 
   private stocksSubject = new BehaviorSubject<IStock[]>([]);
   stocks$ = this.stocksSubject.asObservable();
 
@@ -44,6 +44,15 @@ export class StockService {
       })
     );
   }
+
+  getStockItems(): Observable<IStock[]> {
+  return this.stocks$.pipe(
+    catchError(error => {
+      this.showError('Error al obtener los productos');
+      return throwError(error);
+    })
+  );
+}
 
   updateStock(id: number, quantity: number): Observable<IStock> {
     return this.http.patch<IStock>(`${this.apiUrl}/${id}`, { quantity }).pipe(

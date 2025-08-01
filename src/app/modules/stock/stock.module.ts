@@ -3,6 +3,10 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router'; 
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 import { StockPageComponent } from './pages/stock-page.component';
 import { OrdersPageComponent } from './pages/orders-page.component';
@@ -26,6 +30,10 @@ const stockRoutes: Routes = [
     CommonModule,
     HttpClientModule,
     ReactiveFormsModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatButtonModule,
     RouterModule.forChild(stockRoutes)
   ],
   providers: [StockService]

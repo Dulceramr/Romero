@@ -1,5 +1,6 @@
-import { Component, Input, forwardRef } from '@angular/core';
+import { Component, Input, forwardRef, HostBinding } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { MatFormFieldAppearance } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-stock-input',
@@ -13,28 +14,46 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     }
   ]
 })
+
 export class StockInputComponent implements ControlValueAccessor {
   @Input() min: number = 0;
   @Input() max: number | null = null;
   @Input() placeholder: string = '';
   @Input() disabled: boolean = false;
+  @Input() appearance: MatFormFieldAppearance = 'outline';
+  @Input() label: string = '';
+  @Input() step: number = 1;
+  @Input() hint: string = '';
+
+  @HostBinding('class.error') get errorState() {
+    return this.value < this.min || (this.max !== null && this.value > this.max);
+  }
 
   value: number = 0;
   private onChange: (value: number) => void = () => {};
   private onTouched: () => void = () => {};
 
-  onInput(event: Event): void {
+  increment(): void {
+    this.updateValue(this.value + this.step);
+  }
+
+  decrement(): void {
+    this.updateValue(this.value - this.step);
+  }
+
+   onInput(event: Event): void {
     const input = event.target as HTMLInputElement;
-    let value = parseInt(input.value) || 0;
-    
-    value = Math.max(this.min, value);
+    this.updateValue(parseInt(input.value) || 0);
+  }
+
+  private updateValue(newValue: number): void {
+    let value = Math.max(this.min, newValue);
     if (this.max !== null) {
       value = Math.min(this.max, value);
     }
     
     this.value = value;
     this.onChange(value);
-    input.value = value.toString();
   }
 
   onBlur(): void {
