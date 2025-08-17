@@ -96,9 +96,14 @@ loadStockItems(): void {
           alert(`Orden creada para ${createdOrder.quantity} unidades de ${createdOrder.productName}`);
         }),
         switchMap(createdOrder => {
-          return this.stockService.updateStockQuantity(
-            Number(createdOrder.productId), 
-            -createdOrder.quantity
+          const selectedProduct = this.getSelectedProduct();
+          if (!selectedProduct) {
+            return EMPTY;
+          }
+          const newQuantity = selectedProduct.quantity - createdOrder.quantity;
+          return this.stockService.updateStock(
+            Number(createdOrder.productId),
+            newQuantity
           ).pipe(
             catchError(error => {
               alert('Orden creada pero error actualizando stock');
