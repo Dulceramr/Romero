@@ -4,12 +4,13 @@ import { Observable, BehaviorSubject, throwError, forkJoin } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IStock } from '../../../core/models/stock.model';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StockService {
-  private apiUrl = 'http://localhost:3000/stock';
+  private apiUrl = `${environment.apiUrl}/stock`;
   private stocksSubject = new BehaviorSubject<IStock[]>([]);
   public stocks$ = this.stocksSubject.asObservable();
   public loading = new BehaviorSubject<boolean>(false);
