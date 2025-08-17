@@ -33,7 +33,7 @@
 .error-message {
   padding: 20px;
   text-align: center;
-  color: #f44336; // Material warn color
+  color: #f44336; 
   font-size: 1.2em;
 }
 
@@ -60,7 +60,7 @@
 .table-container {
   position: relative;
   overflow: auto;
-  max-height: 60vh; /* Adjust as needed */
+  max-height: 60vh;
 }
 
 table {
@@ -75,7 +75,6 @@ table {
   padding-right: 16px;
 }
 
-// Ensure the quantity input is vertically centered in the cell
 td.mat-cell:last-of-type {
   display: flex;
   justify-content: center;

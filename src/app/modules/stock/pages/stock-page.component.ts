@@ -1,9 +1,9 @@
-import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Subject, takeUntil, catchError, EMPTY, forkJoin, tap, Observable } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { IStock } from '../../../core/models/stock.model';
 import { StockService } from '../services/stock.service';
 
@@ -12,21 +12,15 @@ import { StockService } from '../services/stock.service';
   templateUrl: './stock-page.component.html',
   styleUrls: ['./stock-page.component.scss']
 })
-export class StockPageComponent implements OnInit, OnDestroy, AfterViewInit {
-  // Material Table properties
+export class StockPageComponent implements OnInit, OnDestroy {
   dataSource = new MatTableDataSource<IStock>();
   displayedColumns: string[] = ['name', 'description', 'quantity'];
-
-  // ViewChild decorators to get references to the paginator and sort
+  
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  // Form properties
   stockForm: FormGroup;
-
-  // State management properties
-  isLoading = true;
-  error: string | null = null;
+  addProductForm: FormGroup;
   
   private destroy$ = new Subject<void>();
 
@@ -37,14 +31,22 @@ export class StockPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.stockForm = this.fb.group({
       products: this.fb.array([])
     });
+    
+    this.addProductForm = this.fb.group({
+      name: [''],
+      description: [''],
+      quantity: [0]
+    });
   }
 
   ngOnInit(): void {
     this.loadStockData();
+    
+    this.stockService.loading.pipe(takeUntil(this.destroy$)).subscribe();
+    this.stockService.error.pipe(takeUntil(this.destroy$)).subscribe();
   }
 
   ngAfterViewInit(): void {
-    // These need to be set after the view has been initialized
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
@@ -54,93 +56,102 @@ export class StockPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.destroy$.complete();
   }
 
-get products(): FormArray {
-  return this.stockForm.get('products') as FormArray;
-}
-
   loadStockData(): void {
-    this.isLoading = true;
-    this.error = null;
     this.stockService.getStockItems().pipe(
-      takeUntil(this.destroy$),
-      tap(stocks => {
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: (stocks: IStock[]) => {
         this.dataSource.data = stocks;
         this.buildForm(stocks);
-        this.isLoading = false;
-      }),
-      catchError(() => {
-        this.error = 'Failed to load stock data. Please try again later.';
-        this.isLoading = false;
-        return EMPTY;
-      })
-    ).subscribe();
-  }
-
-buildForm(stocks: IStock[]): void {
-  // Limpiar el FormArray de manera segura
-  while (this.products.length !== 0) {
-    this.products.removeAt(0);
-  }
-
-  // Agregar nuevos controles
-  stocks.forEach(stock => {
-    const productGroup = this.fb.group({
-      id: [stock.id],
-      quantity: [stock.quantity]
+      },
+      error: (err: Error) => {
+        console.error('Error loading stock data', err);
+      }
     });
-    this.products.push(productGroup);
-  });
-}
+  }
+
+  get products(): FormArray {
+    return this.stockForm.get('products') as FormArray;
+  }
+
+  private buildForm(stocks: IStock[]): void {
+    this.products.clear();
+    stocks.forEach(stock => {
+      this.products.push(this.fb.group({
+        id: [stock.id],
+        quantity: [stock.quantity]
+      }));
+    });
+  }
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.dataSource.paginator?.firstPage();
+  }
 
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+  addProduct(): void {
+    if (this.addProductForm.invalid) return;
+    
+    const newProduct = this.addProductForm.value;
+    this.stockService.addStock(newProduct).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: () => {
+        this.addProductForm.reset();
+        this.addProductForm.get('quantity')?.setValue(0);
+      },
+      error: (err: Error) => {
+        console.error('Error adding product', err);
+      }
+    });
   }
 
   saveChanges(): void {
-    if (this.stockForm.invalid || !this.stockForm.dirty) {
-    return;
-  }
+    if (this.stockForm.invalid || !this.stockForm.dirty) return;
 
-  this.isLoading = true;
-  const updateObservables: Observable<any>[] = []; // Tipo explícito aquí
+    const updates = this.products.controls
+      .filter(control => control.dirty)
+      .map(control => ({
+        id: control.get('id')?.value as number,
+        quantity: control.get('quantity')?.value as number
+      }));
 
-  this.products.controls.forEach(control => {
-    if (control.dirty) {
-      const productId = control.get('id')?.value;
-      const newQuantity = control.get('quantity')?.value;
-      if (productId && newQuantity !== undefined) {
-        updateObservables.push(
-          this.stockService.updateStock(productId, newQuantity)
-        );
-      }
-    }
-    });
+    if (updates.length === 0) return;
 
-    if (updateObservables.length > 0) {
-      forkJoin(updateObservables).pipe(
-        takeUntil(this.destroy$),
-        catchError(() => {
-          // The service already shows a snackbar for individual errors
-          return EMPTY;
-        }),
-      ).subscribe(() => {
-        this.stockForm.markAsPristine();
-        this.isLoading = false;
-        // Optionally, reload data to confirm sync with backend
-        // this.loadStockData(); 
-      });
+    if (updates.length === 1) {
+      this.stockService.updateStock(updates[0].id, updates[0].quantity).pipe(
+        takeUntil(this.destroy$)
+      ).subscribe();
     } else {
-      this.isLoading = false;
+      this.stockService.batchUpdateStocks(updates).pipe(
+        takeUntil(this.destroy$)
+      ).subscribe();
     }
   }
 
-  // Helper to get total products count, respecting filter
+  deleteProduct(id: number): void {
+  this.stockService.deleteStock(id).pipe(
+    takeUntil(this.destroy$)
+  ).subscribe({
+    next: () => {
+      this.loadStockData();
+    },
+    error: (err: Error) => {
+      console.error('Error deleting product', err);
+    }
+  });
+}
+
   get totalProducts(): number {
     return this.dataSource?.filteredData?.length || 0;
+  }
+
+  get isLoading(): boolean {
+    return this.stockService.loading.value;
+  }
+
+  get error(): string | null {
+    return this.stockService.error.value;
   }
 }

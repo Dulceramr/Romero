@@ -60,7 +60,6 @@ export class StockInputComponent implements ControlValueAccessor {
     this.onTouched();
   }
 
-  // ControlValueAccessor methods
   writeValue(value: number): void {
     this.value = value || 0;
   }

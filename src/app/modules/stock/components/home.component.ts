@@ -17,5 +17,4 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
-  welcomeMessage = "Bienvenido al Sistema de Gestión de Laboratorio";
 }
