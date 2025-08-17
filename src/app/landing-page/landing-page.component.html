@@ -1,0 +1,94 @@
+<div class="landing-container mat-typography">
+  <!-- Header -->
+  <mat-toolbar class="lab-header mat-elevation-z6">
+    <div class="header-content">
+      <span class="lab-title">
+        <mat-icon class="title-icon">science</mat-icon>
+        Romero
+      </span>
+      <div class="wave-divider"></div>
+    </div>
+  </mat-toolbar>
+  
+  <!-- Navigation -->
+  <nav mat-tab-nav-bar class="lab-nav mat-elevation-z2">
+    <a mat-tab-link
+       *ngFor="let link of navLinks"
+       [routerLink]="link.path"
+       routerLinkActive #rla="routerLinkActive"
+       [active]="rla.isActive">
+      <mat-icon class="nav-icon">{{link.icon}}</mat-icon>
+      {{link.label}}
+    </a>
+  </nav>
+  
+  <!-- Main content area -->
+  <main class="lab-main-content">
+    <app-home></app-home> 
+    <router-outlet></router-outlet>
+  </main>
+  
+  <!-- Footer -->
+  <footer class="lab-footer mat-elevation-z6">
+      <mat-chip color="primary" selected>
+        <mat-icon>biotech</mat-icon>
+        Sistema de Gestión de Laboratorio
+      </mat-chip>
+  </footer>
+
+  <!-- About creator :) -->
+<section class="about-creator">
+  <div class="creator-container">
+    <div class="creator-header">
+      <h2 class="section-title">Sobre la Desarrolladora</h2>
+      <div class="title-decoration">
+        <div class="pusheen-icon">
+          <img src="assets/pusheen.jpg" alt="Pusheen" width="50" class="pusheen-img">
+        </div>
+      </div>
+    </div>
+
+    <div class="creator-content">
+      <div class="creator-image">
+        <img src="assets/dulce.jpg" alt="Dulce Ramírez" class="profile-img">
+        <div class="image-border"></div>
+      </div>
+
+      <div class="creator-details">
+        <h3 class="creator-name">Dulce Ramírez</h3>
+        <p class="creator-title">Bióloga | Bioquímica | Amante de la Física Cuántica</p>
+        
+        <div class="creator-bio">
+          <p>Hice el doctorado en Ciencias Bioquímicas, me gusta la biología molecular, microbiología y los misterios del universo cuántico.</p>
+          <p>En mi tiempo libre disfruto bailando, me gusta tiktok y acariciar a mi gato.</p>
+          <p>Creo firmemente que la ciencia y la tecnologia debe ser accesible, humana y llena de color.</p>
+        </div>
+
+        <div class="interests-grid">
+          <div class="interest-item">
+            <img src="assets/dna.svg" alt="DNA" width="54">
+            <span>Biología Molecular</span>
+          </div>
+          <div class="interest-item">
+            <img src="assets/atomo.svg" alt="Física" width="74">
+            <span>Física Cuántica</span>
+          </div>
+          <div class="interest-item">
+            <img src="assets/gato.webp" alt="Gatos" width="64">
+            <span>Gatitos</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="creator-footer">
+      <div class="publications-notice">
+        <p>¿Sabías que he publicado dos artículos científicos? Aquí puedes consultar uno de ellos:</p>
+        <a href="https://link.springer.com/article/10.1007/s11033-023-08880-w" target="_blank" rel="noopener" class="publication-link">
+          Molecular Biology Reports (Springer, 2023)
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
