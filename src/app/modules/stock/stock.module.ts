@@ -4,6 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router'; 
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -38,6 +39,7 @@ const stockRoutes: Routes = [
     ReactiveFormsModule,
     MatInputModule,
     MatFormFieldModule,
+    MatSelectModule,
     MatIconModule,
     MatButtonModule,
     MatTableModule,
