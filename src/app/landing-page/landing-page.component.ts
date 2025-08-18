@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -29,8 +29,25 @@ interface NavLink {
   styleUrl: './landing-page.component.scss'
 })
 export class LandingPageComponent {
+  @ViewChild('routerContent') mainContent!: ElementRef;
+
+  showBackToTop = false;
+
   navLinks: NavLink[] = [
     { path: '/stock', label: 'Stock', icon: 'science' },
     { path: '/stock/orders', label: 'Órdenes', icon: 'list_alt' }
   ];
+
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    this.showBackToTop = window.pageYOffset > 300;
+  }
+
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  scrollToContent() {
+    this.mainContent.nativeElement.scrollIntoView({ behavior: 'smooth' });
+  }
 }
