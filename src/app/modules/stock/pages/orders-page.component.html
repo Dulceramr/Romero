@@ -3,21 +3,24 @@
     <h2>🧾 Nueva Orden</h2>
 
     <!-- Selector de producto -->
-    <div class="form-group">
-      <label>Producto:</label>
-      <select formControlName="productId" class="form-control" [disabled]="isLoading">
-        <option value="">Seleccione un producto</option>
-        <option *ngFor="let item of stockItems" [value]="item.id">
+    <mat-form-field appearance="outline" class="form-group">
+      <mat-label>Producto</mat-label>
+      <mat-select formControlName="productId" [disabled]="isLoading">
+<mat-option *ngFor="let item of stockItems" [value]="item.id" [style.color]="item.color">
+          <mat-icon class="option-dot" [style.color]="item.color">fiber_manual_record</mat-icon>
           {{ item.name }} ({{ item.quantity }} disponibles)
-        </option>
-      </select>
-      <small *ngIf="orderForm.get('productId')?.invalid && orderForm.get('productId')?.touched" class="error-text">
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="orderForm.get('productId')?.invalid && orderForm.get('productId')?.touched">
         Seleccione un producto
-      </small>
-      <div *ngIf="isLoading && stockItems.length === 0" class="loading-message">
-        Cargando productos...
-      </div>
-    </div>
+      </mat-error>
+      <mat-progress-spinner
+        *ngIf="isLoading && stockItems.length === 0"
+        mode="indeterminate"
+        diameter="24"
+        matSuffix>
+      </mat-progress-spinner>
+    </mat-form-field>
 
     <!-- Cantidad -->
     <div class="form-group">

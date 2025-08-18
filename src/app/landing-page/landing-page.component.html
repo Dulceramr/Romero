@@ -11,21 +11,27 @@
   </mat-toolbar>
   
   <!-- Navigation -->
-  <nav mat-tab-nav-bar class="lab-nav mat-elevation-z2">
+<nav mat-tab-nav-bar class="lab-nav mat-elevation-z2"
+       #tabNavBar
+       [tabPanel]="tabPanel">
     <a mat-tab-link
        *ngFor="let link of navLinks"
        [routerLink]="link.path"
-       routerLinkActive #rla="routerLinkActive"
-       [active]="rla.isActive">
+       routerLinkActive="mat-tab-link-active"
+       [routerLinkActiveOptions]="link.path === '/stock' ? { exact: true } : { exact: false }"
+       (click)="scrollToContent()">
       <mat-icon class="nav-icon">{{link.icon}}</mat-icon>
       {{link.label}}
     </a>
   </nav>
+  <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
   
   <!-- Main content area -->
   <main class="lab-main-content">
     <app-home></app-home> 
-    <router-outlet></router-outlet>
+    <div #routerContent>
+      <router-outlet></router-outlet>
+    </div>
   </main>
   
   <!-- Footer -->
@@ -37,6 +43,10 @@
   </footer>
 
   <!-- About creator :) -->
+<button mat-fab color="accent" class="back-to-top" (click)="scrollToTop()" *ngIf="showBackToTop">
+  <mat-icon>arrow_upward</mat-icon>
+</button>
+
 <section class="about-creator">
   <div class="creator-container">
     <div class="creator-header">
