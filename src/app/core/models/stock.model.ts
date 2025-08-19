@@ -7,4 +7,5 @@ export interface IStock {
   location?: string;
   createdAt?: Date;
   updatedAt?: Date;
+  color?: string;
 }

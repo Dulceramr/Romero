@@ -71,6 +71,7 @@ export const STOCK_DATA: IStock[] = [
     quantity: 1104,
     category: 'Materiales',
     location: 'Almacén A',
+    color: '#40E0D0',
   },
   {
     id: 2,
@@ -78,6 +79,7 @@ export const STOCK_DATA: IStock[] = [
     quantity: 250,
     category: 'Seguridad',
     location: 'Almacén B',
+    color: '#9370DB',
   },
   {
     id: 3,
@@ -85,6 +87,7 @@ export const STOCK_DATA: IStock[] = [
     quantity: 10,
     category: 'Instrumentos',
     location: 'Laboratorio Central',
+    color: '#1E90FF',
   },
   {
     id: 4,
@@ -92,6 +95,7 @@ export const STOCK_DATA: IStock[] = [
     quantity: 79,
     category: 'Indumentaria',
     location: 'Almacén C',
+    color: '#FF6B6B',
   },
   {
     id: 5,
@@ -99,6 +103,7 @@ export const STOCK_DATA: IStock[] = [
     quantity: 30,
     category: 'Reactivos',
     location: 'Almacén A',
+    color: '#40E0D0',
   },
   {
     id: 6,
@@ -106,6 +111,7 @@ export const STOCK_DATA: IStock[] = [
     quantity: 100,
     category: 'Seguridad',
     location: 'Almacén B',
+    color: '#9370DB',
   },
   {
     id: 7,
@@ -113,6 +119,7 @@ export const STOCK_DATA: IStock[] = [
     quantity: 8,
     category: 'Instrumentos',
     location: 'Laboratorio Central',
+    color: '#1E90FF',
   },
   {
     id: 8,
@@ -120,6 +127,7 @@ export const STOCK_DATA: IStock[] = [
     quantity: -1,
     category: 'Materiales',
     location: 'Almacén A',
+    color: '#FF6B6B',
   },
   {
     id: 9,
@@ -127,6 +135,7 @@ export const STOCK_DATA: IStock[] = [
     quantity: 120,
     category: 'Seguridad',
     location: 'Almacén B',
+    color: '#40E0D0',
   },
   {
     id: 10,
@@ -134,5 +143,6 @@ export const STOCK_DATA: IStock[] = [
     quantity: 200,
     category: 'Materiales',
     location: 'Almacén C',
+    color: '#9370DB',
   },
 ];
