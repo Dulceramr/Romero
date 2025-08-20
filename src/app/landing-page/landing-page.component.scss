@@ -310,3 +310,12 @@
     gap: 1.5rem;
   }
 }
+
+.scroll-to-top {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background-color: #2ae3d0;
+  color: #0e1b19;
+  z-index: 1000;
+}

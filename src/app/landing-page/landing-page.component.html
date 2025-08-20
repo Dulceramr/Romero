@@ -17,7 +17,7 @@
        [routerLink]="link.path"
        routerLinkActive #rla="routerLinkActive"
        [active]="rla.isActive"
-       (click)="scrollToMainContent()">
+       (click)="scrollToRouterOutlet()">
       <mat-icon class="nav-icon">{{link.icon}}</mat-icon>
       {{link.label}}
     </a>
@@ -25,9 +25,9 @@
   <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
   
   <!-- Main content area -->
-  <main class="lab-main-content" #mainContent>
+  <main class="lab-main-content">
     <app-home></app-home> 
-    <router-outlet></router-outlet>
+    <router-outlet #routerOutlet></router-outlet>
   </main>
   
   <!-- Footer -->

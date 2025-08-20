@@ -31,7 +31,7 @@ interface NavLink {
   styleUrl: './landing-page.component.scss'
 })
 export class LandingPageComponent {
-  @ViewChild('mainContent') mainContent!: ElementRef;
+  @ViewChild('routerOutlet') routerOutlet!: ElementRef;
   showScrollButton = false;
 
   navLinks: NavLink[] = [
@@ -48,8 +48,8 @@ export class LandingPageComponent {
     }
   }
 
-  scrollToMainContent(): void {
-    this.mainContent.nativeElement.scrollIntoView({ behavior: 'smooth' });
+  scrollToRouterOutlet(): void {
+    this.routerOutlet.nativeElement.scrollIntoView({ behavior: 'smooth' });
   }
 
   scrollToTop(): void {
