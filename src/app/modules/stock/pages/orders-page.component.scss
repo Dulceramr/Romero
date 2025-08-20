@@ -87,3 +87,14 @@
     background-color: darken(#f5f5f5, 10%);
   }
 }
+
+select.form-control {
+  background-color: #e8f3f2;
+  color: #04100f;
+  border-radius: 30px;
+  padding: 0.8rem 1.5rem;
+
+  option {
+    color: #398f88;
+  }
+}
