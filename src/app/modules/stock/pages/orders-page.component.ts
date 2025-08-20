@@ -37,9 +37,14 @@ export class OrdersPageComponent implements OnInit {
 
 loadStockItems(): void {
   this.isLoading = true;
+  const palette = ['#40E0D0', '#9370DB', '#1E90FF', '#FF6B6B'];
+
   this.stockService.getStockItems().subscribe({
     next: (stocks: IStock[]) => {
-      this.stockItems = stocks;
+      this.stockItems = stocks.map((item, index) => ({
+        ...item,
+        color: palette[index % palette.length]
+      }));
       this.isLoading = false;
     },
     error: (error) => {

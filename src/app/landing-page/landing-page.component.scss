@@ -125,6 +125,12 @@ mat-tab-nav-panel {
   margin-bottom: 3rem;
 }
 
+@media (max-width: 768px) {
+  .creator-header .section-title {
+    text-align: center;
+  }
+}
+
 .section-title {
   font-size: 2.5rem;
   color: #7e57c2;

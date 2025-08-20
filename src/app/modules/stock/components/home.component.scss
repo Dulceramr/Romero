@@ -173,3 +173,17 @@
     height: 85%;
   }
 }
+
+@media (max-width: 768px) {
+  .value-propositions {
+    grid-template-columns: 1fr;
+  }
+
+  .testimonials .testimonial-container {
+    grid-template-columns: 1fr;
+  }
+
+  .petri-dish {
+    border-radius: 20px;
+  }
+}
