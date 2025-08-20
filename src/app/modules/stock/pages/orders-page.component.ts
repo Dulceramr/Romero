@@ -37,19 +37,17 @@ export class OrdersPageComponent implements OnInit {
 
 loadStockItems(): void {
   this.isLoading = true;
-  const palette = ['#40E0D0', '#9370DB', '#1E90FF', '#FF6B6B'];
-
+  this.orderForm.disable();
   this.stockService.getStockItems().subscribe({
     next: (stocks: IStock[]) => {
-      this.stockItems = stocks.map((item, index) => ({
-        ...item,
-        color: palette[index % palette.length]
-      }));
+      this.stockItems = stocks;
       this.isLoading = false;
+      this.orderForm.enable();
     },
     error: (error) => {
       console.error('Error:', error);
       this.isLoading = false;
+      this.orderForm.enable();
     }
   });
 }
@@ -84,6 +82,7 @@ loadStockItems(): void {
   onSubmit(): void {
     if (this.orderForm.valid) {
       this.isLoading = true;
+      this.orderForm.disable();
       const selectedProduct = this.getSelectedProduct();
 
       const orderData: Order = {
@@ -101,14 +100,9 @@ loadStockItems(): void {
           alert(`Orden creada para ${createdOrder.quantity} unidades de ${createdOrder.productName}`);
         }),
         switchMap(createdOrder => {
-          const selectedProduct = this.getSelectedProduct();
-          if (!selectedProduct) {
-            return EMPTY;
-          }
-          const newQuantity = selectedProduct.quantity - createdOrder.quantity;
-          return this.stockService.updateStock(
-            Number(createdOrder.productId),
-            newQuantity
+          return this.stockService.updateStockQuantity(
+            Number(createdOrder.productId), 
+            -createdOrder.quantity
           ).pipe(
             catchError(error => {
               alert('Orden creada pero error actualizando stock');
@@ -122,6 +116,7 @@ loadStockItems(): void {
         }),
         finalize(() => {
           this.isLoading = false;
+          this.orderForm.enable();
           this.resetForm();
           this.loadStockItems();
         })
@@ -133,5 +128,6 @@ loadStockItems(): void {
     this.orderForm.reset({
       quantity: 1
     });
+    this.orderForm.enable();
   }
 }

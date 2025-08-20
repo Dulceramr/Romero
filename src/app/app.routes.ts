@@ -6,7 +6,6 @@ export const routes: Routes = [
     path: '', 
     component: LandingPageComponent,
     children: [
-      { path: '', redirectTo: 'stock', pathMatch: 'full' },
       { 
         path: 'stock', 
         loadChildren: () => import('./modules/stock/stock.module').then(m => m.StockModule) 

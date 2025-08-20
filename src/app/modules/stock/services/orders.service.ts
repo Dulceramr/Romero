@@ -1,41 +1,23 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { Order } from '../../../core/models/orders.model';
-import { ORDERS_DATA } from '../../../core/mocks/db.mock';
+import { InMemoryDataService } from '../../../core/services/in-memory-data.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class OrdersService {
-  constructor() {}
+  constructor(private inMemoryDataService: InMemoryDataService) { }
 
-  createOrder(order: Order): Observable<Order> {
-    // Simulate adding a new order
-    const newOrder = { ...order, id: new Date().getTime() };
-    ORDERS_DATA.push(newOrder);
-    return of(newOrder).pipe(delay(300));
+  createOrder(order: Omit<Order, 'id' | 'createdAt' | 'status'>): Observable<Order> {
+    return this.inMemoryDataService.createOrder(order);
   }
 
   getOrders(): Observable<Order[]> {
-    // 20% chance of error
-    if (Math.random() > 0.2) {
-      return of(ORDERS_DATA).pipe(delay(300));
-    } else {
-      return throwError(() => new Error('Mock API Failure: Could not fetch orders.'));
-    }
+    return this.inMemoryDataService.getOrders();
   }
 
-  updateOrderStatus(
-    id: number,
-    status: 'completed' | 'cancelled'
-  ): Observable<Order> {
-    const orderIndex = ORDERS_DATA.findIndex((o) => o.id === id);
-    if (orderIndex === -1) {
-      return throwError(() => new Error('Order not found.'));
-    }
-    const updatedOrder = { ...ORDERS_DATA[orderIndex], status };
-    ORDERS_DATA[orderIndex] = updatedOrder;
-    return of(updatedOrder).pipe(delay(300));
+  updateOrderStatus(id: number, status: 'completed' | 'cancelled'): Observable<Order> {
+    return this.inMemoryDataService.updateOrderStatus(id, status);
   }
 }

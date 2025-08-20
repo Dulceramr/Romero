@@ -1,4 +1,4 @@
-import { Component, HostListener, ViewChild, ElementRef } from '@angular/core';
+import { Component, ElementRef, ViewChild, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatChipsModule } from '@angular/material/chips';
 import { HomeComponent } from '../modules/stock/components/home.component';
+import { MatButtonModule } from '@angular/material/button';
 
 interface NavLink {
   path: string;
@@ -24,14 +25,14 @@ interface NavLink {
     MatTabsModule,
     MatChipsModule,
     HomeComponent,
+    MatButtonModule
   ],
   templateUrl: './landing-page.component.html',
   styleUrl: './landing-page.component.scss'
 })
 export class LandingPageComponent {
-  @ViewChild('routerContent') mainContent!: ElementRef;
-
-  showBackToTop = false;
+  @ViewChild('routerOutlet') routerOutlet!: ElementRef;
+  showScrollButton = false;
 
   navLinks: NavLink[] = [
     { path: '/stock', label: 'Stock', icon: 'science' },
@@ -39,15 +40,19 @@ export class LandingPageComponent {
   ];
 
   @HostListener('window:scroll', [])
-  onWindowScroll() {
-    this.showBackToTop = window.pageYOffset > 300;
+  onWindowScroll(): void {
+    if (window.pageYOffset > 300) {
+      this.showScrollButton = true;
+    } else {
+      this.showScrollButton = false;
+    }
   }
 
-  scrollToTop() {
+  scrollToRouterOutlet(): void {
+    this.routerOutlet.nativeElement.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  scrollToTop(): void {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  scrollToContent() {
-    this.mainContent.nativeElement.scrollIntoView({ behavior: 'smooth' });
   }
 }

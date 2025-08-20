@@ -88,10 +88,15 @@
   }
 }
 
-.option-dot {
-  font-size: 14px;
-  height: 14px;
-  width: 14px;
-  vertical-align: middle;
-  margin-right: 8px;
+::ng-deep .mat-select-panel {
+  background-color: #e8f3f2;
+  border-radius: 30px !important;
+}
+
+::ng-deep .mat-option {
+  color: #398f88;
+}
+
+::ng-deep .mat-select-value-text {
+  color: #04100f;
 }

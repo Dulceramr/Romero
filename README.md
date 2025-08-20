@@ -14,13 +14,13 @@ Develop a web application for efficient inventory management in biological labor
 
 ## 🔍 Justification
 In biological research environments, **34% of technical time is lost** due to:
-- Manual search for reagents
-- Outdated spreadsheet-based inventory systems
+- Manual search for reagents  
+- Outdated spreadsheet-based inventory systems  
 - Human errors in stock records
 
 **BioStock Manager** was created to:
-- Reduce manual management time by 50%.
-- Prevent financial losses due to unnoticed reagent expiration.
+- Reduce manual management time by 50%.  
+- Prevent financial losses due to unnoticed reagent expiration.  
 - Centralize critical information for multidisciplinary teams.
 
 ## ⚠️ Current Issues
@@ -91,40 +91,23 @@ git clone https://github.com/your-username/biostock-manager.git
 npm install
 
 # 3. Start the mock server (db.json)
-npm run start:server
+npm run server
 
 # 4. Start the Angular application
-npm start
+ng serve
 ```
 
-## 🌐 Deployment
-
-This application is configured for deployment to a Node.js hosting service like Render, Glitch, or Cyclic.
-
-1.  **Set Production API URL**: Before deploying, you need to set the `apiUrl` in `src/environments/environment.prod.ts`. Replace the empty string with the URL of your deployed backend.
-
-    ```typescript
-    // src/environments/environment.prod.ts
-    export const environment = {
-      production: true,
-      apiUrl: 'https://your-production-api-url.com' // 👈 Add your URL here
-    };
-    ```
-
-2.  **Deployment Commands**: The hosting service should use the following commands:
-    *   **Build Command**: `npm install`
-    *   **Start Command**: `npm run start:prod`
-
-    The `postinstall` script in `package.json` will automatically build the Angular application after the dependencies are installed. The `start:prod` script will start the production server.
+## 🌐 Access
+Access the application at: [http://localhost:4200](http://localhost:4200) after starting the development server.
 
 ## 📜 License & Credits
-**MIT License**
+**MIT License**  
 © 2023 [Dulce Ramírez](https://github.com/Dulceramr) | Grupo Romeu Technical Assessment
 
 *Free for academic and non-profit institutions with attribution.*
 
 ---
 
-*"From biologists, for biologists: Manage your reagents with the same precision as your experimental data."* 🧬🔬
+*"From biologists, for biologists: Manage your reagents with the same precision as your experimental data."* 🧬🔬  
 
 *Developed with scientific rigor for Grupo Romeu's technical evaluation.*
