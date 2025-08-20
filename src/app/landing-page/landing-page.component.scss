@@ -125,6 +125,12 @@ mat-tab-nav-panel {
   margin-bottom: 3rem;
 }
 
+@media (max-width: 768px) {
+  .creator-header .section-title {
+    text-align: center;
+  }
+}
+
 .section-title {
   font-size: 2.5rem;
   color: #7e57c2;
@@ -270,6 +276,17 @@ mat-tab-nav-panel {
   bottom: 2rem;
   right: 2rem;
   z-index: 1000;
+  background-color: #6A35D1;
+  color: #FFFFFF;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+  }
 }
 
 .signature {

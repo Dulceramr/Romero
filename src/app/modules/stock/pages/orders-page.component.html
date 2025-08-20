@@ -6,7 +6,7 @@
     <mat-form-field appearance="outline" class="form-group">
       <mat-label>Producto</mat-label>
       <mat-select formControlName="productId" [disabled]="isLoading">
-<mat-option *ngFor="let item of stockItems" [value]="item.id" [style.color]="item.color">
+        <mat-option *ngFor="let item of stockItems" [value]="item.id" [style.color]="item.color">
           <mat-icon class="option-dot" [style.color]="item.color">fiber_manual_record</mat-icon>
           {{ item.name }} ({{ item.quantity }} disponibles)
         </mat-option>
