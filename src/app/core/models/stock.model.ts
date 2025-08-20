@@ -5,4 +5,6 @@ export interface IStock {
   quantity: number;
   createdAt?: Date;
   updatedAt?: Date;
+  category?: string;
+  location?: string;
 }
