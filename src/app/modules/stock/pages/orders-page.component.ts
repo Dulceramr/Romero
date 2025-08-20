@@ -37,14 +37,17 @@ export class OrdersPageComponent implements OnInit {
 
 loadStockItems(): void {
   this.isLoading = true;
+  this.orderForm.disable();
   this.stockService.getStockItems().subscribe({
     next: (stocks: IStock[]) => {
       this.stockItems = stocks;
       this.isLoading = false;
+      this.orderForm.enable();
     },
     error: (error) => {
       console.error('Error:', error);
       this.isLoading = false;
+      this.orderForm.enable();
     }
   });
 }
@@ -79,6 +82,7 @@ loadStockItems(): void {
   onSubmit(): void {
     if (this.orderForm.valid) {
       this.isLoading = true;
+      this.orderForm.disable();
       const selectedProduct = this.getSelectedProduct();
 
       const orderData: Order = {
@@ -112,6 +116,7 @@ loadStockItems(): void {
         }),
         finalize(() => {
           this.isLoading = false;
+          this.orderForm.enable();
           this.resetForm();
           this.loadStockItems();
         })
@@ -123,5 +128,6 @@ loadStockItems(): void {
     this.orderForm.reset({
       quantity: 1
     });
+    this.orderForm.enable();
   }
 }

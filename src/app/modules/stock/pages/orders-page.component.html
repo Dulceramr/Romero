@@ -6,7 +6,7 @@
     <div class="form-group">
       <mat-form-field appearance="fill">
         <mat-label>Producto</mat-label>
-        <mat-select formControlName="productId" [disabled]="isLoading">
+        <mat-select formControlName="productId">
           <mat-option *ngFor="let item of stockItems" [value]="item.id">
             {{ item.name }} ({{ item.quantity }} disponibles)
           </mat-option>
@@ -23,7 +23,7 @@
     <!-- Cantidad -->
     <div class="form-group">
       <label>Cantidad:</label>
-      <input type="number" formControlName="quantity" class="form-control" [disabled]="isLoading">
+      <input type="number" formControlName="quantity" class="form-control">
       <small *ngIf="orderForm.get('quantity')?.errors?.['max']" class="error-text">
         Máximo disponible: {{getSelectedProduct()?.quantity || 0}}
       </small>
@@ -32,7 +32,7 @@
     <!-- Destino -->
     <div class="form-group">
       <label>Destino:</label>
-      <input type="text" formControlName="destination" class="form-control" [disabled]="isLoading">
+      <input type="text" formControlName="destination" class="form-control">
       <small *ngIf="orderForm.get('destination')?.invalid && orderForm.get('destination')?.touched" class="error-text">
         Ingrese un destino válido
       </small>
@@ -41,15 +41,15 @@
     <!-- Notas -->
     <div class="form-group">
       <label>Notas (opcional):</label>
-      <textarea formControlName="notes" class="form-control" rows="3" [disabled]="isLoading"></textarea>
+      <textarea formControlName="notes" class="form-control" rows="3"></textarea>
     </div>
 
     <!-- Botones -->
     <div class="form-actions">
-      <button type="submit" class="primary-btn" [disabled]="!orderForm.valid || isLoading">
+      <button type="submit" class="primary-btn" [disabled]="orderForm.invalid">
         {{ isLoading ? 'Procesando...' : 'Crear Orden' }}
       </button>
-      <button type="button" class="secondary-btn" (click)="resetForm()" [disabled]="isLoading">
+      <button type="button" class="secondary-btn" (click)="resetForm()">
         Limpiar
       </button>
     </div>
