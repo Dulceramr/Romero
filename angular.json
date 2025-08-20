@@ -20,7 +20,7 @@
             "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts", 
-            "baseHref": "/Romero/", 
+            "baseHref": "/", 
             "polyfills": [
               "zone.js"
             ],
