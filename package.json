@@ -8,7 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "start:server": "json-server --watch db.json",
-    "deploy": "ng build --configuration production --base-href /Romero/ && npx gh-pages -d dist/stock-management",
+    "predeploy": "npx ng build --configuration production && echo '' > dist/stock-management/.nojekyll",
+    "deploy": "npx gh-pages -d dist/stock-management --dotfiles",
     "start:prod": "node server.js"
   },
   "private": true,
