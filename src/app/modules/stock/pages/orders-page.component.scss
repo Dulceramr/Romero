@@ -88,13 +88,15 @@
   }
 }
 
-select.form-control {
+::ng-deep .mat-select-panel {
   background-color: #e8f3f2;
-  color: #04100f;
-  border-radius: 30px;
-  padding: 0.8rem 1.5rem;
+  border-radius: 30px !important;
+}
 
-  option {
-    color: #398f88;
-  }
+::ng-deep .mat-option {
+  color: #398f88;
+}
+
+::ng-deep .mat-select-value-text {
+  color: #04100f;
 }

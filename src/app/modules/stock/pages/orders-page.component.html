@@ -4,16 +4,17 @@
 
     <!-- Selector de producto -->
     <div class="form-group">
-      <label>Producto:</label>
-      <select formControlName="productId" class="form-control" [disabled]="isLoading">
-        <option value="">Seleccione un producto</option>
-        <option *ngFor="let item of stockItems" [value]="item.id">
-          {{ item.name }} ({{ item.quantity }} disponibles)
-        </option>
-      </select>
-      <small *ngIf="orderForm.get('productId')?.invalid && orderForm.get('productId')?.touched" class="error-text">
-        Seleccione un producto
-      </small>
+      <mat-form-field appearance="fill">
+        <mat-label>Producto</mat-label>
+        <mat-select formControlName="productId" [disabled]="isLoading">
+          <mat-option *ngFor="let item of stockItems" [value]="item.id">
+            {{ item.name }} ({{ item.quantity }} disponibles)
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="orderForm.get('productId')?.invalid && orderForm.get('productId')?.touched">
+          Seleccione un producto
+        </mat-error>
+      </mat-form-field>
       <div *ngIf="isLoading && stockItems.length === 0" class="loading-message">
         Cargando productos...
       </div>
