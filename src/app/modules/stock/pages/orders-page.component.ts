@@ -37,6 +37,7 @@ export class OrdersPageComponent implements OnInit {
 
 loadStockItems(): void {
   this.isLoading = true;
+  this.toggleForm(false);
   const palette = ['#40E0D0', '#9370DB', '#1E90FF', '#FF6B6B'];
 
   this.stockService.getStockItems().subscribe({
@@ -46,10 +47,12 @@ loadStockItems(): void {
         color: palette[index % palette.length]
       }));
       this.isLoading = false;
+      this.toggleForm(true);
     },
     error: (error) => {
       console.error('Error:', error);
       this.isLoading = false;
+      this.toggleForm(true);
     }
   });
 }
@@ -58,6 +61,14 @@ loadStockItems(): void {
     this.orderForm.get('productId')?.valueChanges.subscribe(() => {
       this.updateQuantityValidator();
     });
+  }
+
+  toggleForm(enable: boolean): void {
+    if (enable) {
+      this.orderForm.enable();
+    } else {
+      this.orderForm.disable();
+    }
   }
 
   updateQuantityValidator(): void {
@@ -84,6 +95,7 @@ loadStockItems(): void {
   onSubmit(): void {
     if (this.orderForm.valid) {
       this.isLoading = true;
+      this.toggleForm(false);
       const selectedProduct = this.getSelectedProduct();
 
       const orderData: Order = {
@@ -122,6 +134,7 @@ loadStockItems(): void {
         }),
         finalize(() => {
           this.isLoading = false;
+          this.toggleForm(true);
           this.resetForm();
           this.loadStockItems();
         })
