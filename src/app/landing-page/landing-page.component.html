@@ -11,7 +11,7 @@
   </mat-toolbar>
   
   <!-- Navigation -->
-  <nav mat-tab-nav-bar class="lab-nav mat-elevation-z2">
+  <nav mat-tab-nav-bar [tabPanel]="tabPanel" class="lab-nav mat-elevation-z2">
     <a mat-tab-link
        *ngFor="let link of navLinks"
        [routerLink]="link.path"
@@ -21,6 +21,7 @@
       {{link.label}}
     </a>
   </nav>
+  <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
   
   <!-- Main content area -->
   <main class="lab-main-content">
