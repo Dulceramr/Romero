@@ -16,7 +16,8 @@
        *ngFor="let link of navLinks"
        [routerLink]="link.path"
        routerLinkActive #rla="routerLinkActive"
-       [active]="rla.isActive">
+       [active]="rla.isActive"
+       (click)="scrollToMainContent()">
       <mat-icon class="nav-icon">{{link.icon}}</mat-icon>
       {{link.label}}
     </a>
@@ -24,7 +25,7 @@
   <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
   
   <!-- Main content area -->
-  <main class="lab-main-content">
+  <main class="lab-main-content" #mainContent>
     <app-home></app-home> 
     <router-outlet></router-outlet>
   </main>
@@ -38,6 +39,10 @@
   </footer>
 
   <!-- About creator :) -->
+<button mat-fab *ngIf="showScrollButton" class="scroll-to-top" (click)="scrollToTop()">
+  <mat-icon>arrow_upward</mat-icon>
+</button>
+
 <section class="about-creator">
   <div class="creator-container">
     <div class="creator-header">
