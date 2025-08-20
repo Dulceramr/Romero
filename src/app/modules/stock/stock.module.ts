@@ -14,11 +14,13 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { StockPageComponent } from './pages/stock-page.component';
 import { OrdersPageComponent } from './pages/orders-page.component';
 import { StockInputComponent } from './pages/stock-input.component';
 import { QuantityInputComponent } from './components/quantity-input.component';
+import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { StockService } from './services/stock.service';
 
 const stockRoutes: Routes = [
@@ -32,6 +34,7 @@ const stockRoutes: Routes = [
     OrdersPageComponent,
     StockInputComponent,
     QuantityInputComponent,
+    ConfirmationDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -48,6 +51,7 @@ const stockRoutes: Routes = [
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatCardModule,
+    MatDialogModule,
     RouterModule.forChild(stockRoutes)
   ],
   providers: [StockService]

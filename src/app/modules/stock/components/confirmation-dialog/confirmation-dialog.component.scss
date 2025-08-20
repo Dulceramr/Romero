@@ -1,0 +1,22 @@
+:host {
+    display: block;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  [mat-dialog-title] {
+    color: #6A35D1;
+    font-weight: bold;
+  }
+
+  [mat-dialog-content] p {
+    margin: 0 0 1rem;
+  }
+
+  [mat-dialog-actions] {
+    justify-content: flex-end;
+  }
+
+  button[mat-button] {
+    background-color: #6A35D1;
+    color: white;
+  }

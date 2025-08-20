@@ -3,9 +3,11 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
 import { IStock } from '../../../core/models/stock.model';
 import { StockService } from '../services/stock.service';
+import { ConfirmationDialogComponent } from '../components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-stock-page',
@@ -26,7 +28,8 @@ export class StockPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private stockService: StockService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private dialog: MatDialog
   ) {
     this.stockForm = this.fb.group({
       products: this.fb.array([])
@@ -119,6 +122,18 @@ export class StockPageComponent implements OnInit, OnDestroy {
 
     if (updates.length === 0) return;
 
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      // Reset the form state after dialog is closed
+      this.stockForm.reset(this.stockForm.value);
+    });
+
+    // The following code can be kept if you still want to perform the action
+    // after showing the dialog, or removed if the dialog is purely informational.
+    // For this case, we'll assume the action is simulated and confirmed by the dialog.
+    /*
     if (updates.length === 1) {
       this.stockService.updateStock(updates[0].id, updates[0].quantity).pipe(
         takeUntil(this.destroy$)
@@ -128,6 +143,7 @@ export class StockPageComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$)
       ).subscribe();
     }
+    */
   }
 
   deleteProduct(id: number): void {
