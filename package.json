@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "start:server": "json-server --watch db.json",
-    "deploy": "ng build --configuration production --base-href /Romero/ && npx gh-pages -d dist/stock-management"
+    "deploy": "ng build --configuration production --base-href /Romero/ && npx gh-pages -d dist/"
   },
   "private": true,
   "dependencies": {
